@@ -82,7 +82,7 @@
     </div>
 
     <div class="site-content">
-        <div class="diary" v-for="(diary, i) in diaries" :key="i">
+        <div class="diary" v-bind="diaries" v-for="(diary, i) in diaries" :key="i">
             <div id="div-diary-title">
                 <a id="diary-title">
                     {{diary.title}}
@@ -114,6 +114,15 @@
             diaries:[{title:"你好呀", time:"2022-6-22 23:21", content:"这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.\n"},
                 {title:"你好呀", time:"2022-6-22 23:21", content:"这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.\n"}]
         }
+    });
+
+    //发送ajax请求
+    let _this = this;
+    axios.post("/fetch").then((res)=>{
+        console.log(res.data);
+        _this.diaries = res.data;
+        console.log(_this.diaries)
+    }).finally(()=>{
     });
 </script>
 
