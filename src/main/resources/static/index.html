@@ -81,8 +81,8 @@
         </a>
     </div>
 
-    <div class="site-content">
-        <div class="diary" v-bind="diaries" v-for="(diary, i) in diaries" :key="i">
+    <div class="site-content" v-if="refresh_diaries">
+        <div class="diary" v-for="(diary, i) in diaries" :key="i">
             <div id="div-diary-title">
                 <a id="diary-title">
                     {{diary.title}}
@@ -108,22 +108,36 @@
 <script src="js/vue.js"></script>
 <script src="js/axios-0.18.0.js"></script>
 <script>
-    new Vue({
+    let v = new Vue({
         el:'#site-main',
         data:{
-            diaries:[{title:"你好呀", time:"2022-6-22 23:21", content:"这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.\n"},
-                {title:"你好呀", time:"2022-6-22 23:21", content:"这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.这是一些话.\n"}]
+            diaries:[],
+            refresh_diaries:false
+        },
+        watch:{
+            diaries(newVal) {
+                console.log("change")
+                this.refresh_diaries = false;
+                //?
+                this.$nextTick(() => {
+                    this.refresh_diaries = true;
+                });
+
+            }
+        },
+        mounted() {
+            //发送ajax请求
+            axios.post("/fetch").then((res)=>{
+                console.log(res.data);
+                this.diaries = res.data;
+                console.log(this.diaries)
+            }).finally(()=>{
+            });
         }
     });
 
-    //发送ajax请求
-    let _this = this;
-    axios.post("/fetch").then((res)=>{
-        console.log(res.data);
-        _this.diaries = res.data;
-        console.log(_this.diaries)
-    }).finally(()=>{
-    });
+    // let _this = this;
+
 </script>
 
 
