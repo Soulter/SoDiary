@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>星の空 日记后台</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:300,400,700&amp;display=swap&amp;subset=chinese-simplified" rel="stylesheet">
+
+    <style>
+        body{
+            font-family: "Noto Serif SC",serif;
+        }
+        .mng-main{
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            min-height: 100vh;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding: 0 24px;
+            margin: 0 auto;
+        }
+        .header{
+            padding-top: 32px;
+            padding-left: 32px;
+        }
+        #welcome-text{
+            font-size: 32px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="mng-main" class="mng-main">
+    <div class="header">
+        <a v-bind="master" id="welcome-text">
+            你好呀！{{master}}
+        </a>
+    </div>
+
+</div>
+
+<script src="js/axios-0.18.0.js"></script>
+<script src="js/vue.js"></script>
+
+<script>
+    let v = new Vue({
+        el:'#mng-main',
+        data:{
+            diaries:[],
+            refresh_diaries:false,
+            master:""
+        },
+        watch:{
+            diaries(newVal) {
+                console.log("change")
+                this.refresh_diaries = false;
+                //?
+                this.$nextTick(() => {
+                    this.refresh_diaries = true;
+                });
+
+            }
+        },
+        mounted() {
+            //发送ajax请求
+            axios.post("/admin").then((res)=>{
+                console.log(res.data);
+                this.master = res.data.msg.username
+            }).finally(()=>{
+            });
+        }
+    });
+
+</script>
+</body>
+</html>

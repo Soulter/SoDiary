@@ -3,7 +3,7 @@ package top.soulter.sodiary.domain;
 import lombok.Data;
 
 @Data
-public class Result {
-    int code;
-    Object msg;
+public class User {
+    String username;
+    String password;
 }
