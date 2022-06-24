@@ -5,7 +5,8 @@
     <title>星の空 日记后台</title>
 
     <link href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:300,400,700&amp;display=swap&amp;subset=chinese-simplified" rel="stylesheet">
-
+    <link href="assets/materialdesignicons.min.css" rel="stylesheet">
+    <link href="assets/vuetify.min.css" rel="stylesheet">
     <style>
         body{
             font-family: "Noto Serif SC",serif;
@@ -33,6 +34,10 @@
             font-size: 32px;
             font-weight: bold;
         }
+        #diary-field{
+            padding-left: 32px;
+            padding-top: 64px;
+        }
     </style>
 </head>
 <body>
@@ -43,10 +48,50 @@
         </a>
     </div>
 
+    <template id="diary-card">
+        <div id="diary-field">
+            <v-col cols="12" sm="6" md="3">
+                <v-text-field
+                        label="标题"
+                        solo
+                        v-model="newDiary.title"
+                ></v-text-field>
+            </v-col>
+
+            <v-col cols="12" >
+                <v-textarea
+                        color="teal"
+                        solo
+                        v-model="newDiary.content"
+                >
+                    <template v-slot:label>
+                        <div>
+                            内容
+                        </div>
+                    </template>
+                </v-textarea>
+            </v-col>
+
+            <v-btn
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="loader = 'loading'">
+                搞定。
+            </v-btn>
+
+            <v-snackbar
+                    v-model="openCreatedDiaryTip"
+            >
+                {{createdDiaryTip}}
+            </v-snackbar>
+        </div>
+    </template>
+
 </div>
 
 <script src="js/axios-0.18.0.js"></script>
 <script src="js/vue.js"></script>
+<script src="js/vuetify.js"></script>
 
 <script>
     let v = new Vue({
@@ -54,7 +99,17 @@
         data:{
             diaries:[],
             refresh_diaries:false,
-            master:""
+            master:"你目前还没登录~",
+            rules: [
+                value => !!value || '必填项~.',
+                value => (value && value.length >= 3) || '再多写点字嘛(3)',
+            ],
+            newDiary:{},
+            in_submit: false,
+            createdDiaryTip:"undefined",
+            openCreatedDiaryTip:false,
+            loading: false,
+            loader: null,
         },
         watch:{
             diaries(newVal) {
@@ -65,7 +120,33 @@
                     this.refresh_diaries = true;
                 });
 
-            }
+            },
+            loader () {
+                if (!this.in_submit){
+                    this.in_submit = true
+                    const l = this.loader
+                    this[l] = !this[l]
+
+                    console.log(this.newDiary)
+                    //发送ajax请求
+                    axios.post("/newDiary",this.newDiary).then((res)=>{
+                        console.log(res.data);
+                        if (res.data.code === 200100){
+                        }else{
+                        }
+                    }).finally(()=>{
+                        this[l] = false
+                        this.in_submit = false
+
+                        this.createdDiaryTip = "日记创建成功。"
+                        this.openCreatedDiaryTip = true
+
+                    });
+
+                    this.loader = null
+                }
+
+            },
         },
         mounted() {
             //发送ajax请求
