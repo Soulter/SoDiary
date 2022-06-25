@@ -49,6 +49,7 @@
             line-height: 1.62;
             margin-bottom: 1.12em;
             letter-spacing: 0.05em;
+            padding-bottom: 32px;
         }
         .site-main{
             -webkit-box-flex: 1;
@@ -65,6 +66,18 @@
             padding: 0 24px;
             margin: 0 auto;
         }
+        .site-foot{
+            padding-top: 32px;
+            text-align: center;
+        }
+
+        #pre-page{
+            font-size: 16px;
+        }
+        #next-page{
+            font-size: 16px;
+        }
+
 
 
 
@@ -76,7 +89,7 @@
 
 <div class="site-main" id="site-main">
     <div class="site-header">
-        <a id="site-title" href="">
+        <a id="site-title" href="./login.html">
             星の空 Diary
         </a>
     </div>
@@ -101,7 +114,18 @@
 
         </div>
 
+
     </div>
+
+    <div class="site-foot">
+        <a id="pre-page" @click="prePage" v-show="showPre">
+            上一页
+        </a>
+        <a id="next-page" @click="nextPage" v-show="showNext">
+            下一页
+        </a>
+    </div>
+
 </div>
 
 
@@ -113,7 +137,11 @@
         data:{
             diaries:[{title:"你好呀",time:"2022/6/22 22:33",content:"示例内容，示例内容。示例内容，示例内容。示例内容，示例内容。很长的示例内容，很长的示例内容很长的示例内容很长的示例内容很长的示例内容很长的示例内容很长的示例内容，长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长长"},
                 {title:"你好呀",time:"2022/6/22 22:33",content:"示例内容，示例内容。示例内容，示例内容。示例内容，示例内容。"}],
-            refresh_diaries:false
+            refresh_diaries:false,
+            page:1,
+            size:5,
+            showPre:false,
+            showNext:false,
         },
         watch:{
             diaries(newVal) {
@@ -128,12 +156,43 @@
         },
         mounted() {
             //发送ajax请求
-            axios.post("/fetch").then((res)=>{
+            axios.get("/fetch?page="+this.page+"&size="+this.size).then((res)=>{
                 console.log(res.data);
                 this.diaries = res.data;
-                console.log(this.diaries)
+                console.log(this.diaries);
+                this.showNext = true;
             }).finally(()=>{
             });
+        },
+        methods: {
+            nextPage(){
+                //发送ajax请求
+                this.page++;
+                axios.get("/fetch?page="+this.page+"&size="+this.size).then((res)=>{
+                    console.log(res.data);
+                    this.diaries = res.data.reverse();
+                    console.log(this.diaries.reverse())
+                    this.showPre = true;
+                    this.showNext = true;
+                }).finally(()=>{
+                });
+            },
+            prePage(){
+                //发送ajax请求
+                this.page--;
+                axios.get("/fetch?page="+this.page+"&size="+this.size).then((res)=>{
+                    console.log(res.data);
+                    this.diaries = res.data.reverse();
+                    console.log(this.diaries.reverse())
+                    if (this.page === 0){
+                        this.showPre = false;
+                    }else
+                        this.showPre = true;
+
+                    this.showNext = true;
+                }).finally(()=>{
+                });
+            },
         }
     });
 

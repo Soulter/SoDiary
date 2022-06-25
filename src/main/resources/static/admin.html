@@ -129,18 +129,18 @@
 
                     console.log(this.newDiary)
                     //发送ajax请求
-                    axios.post("/newDiary",this.newDiary).then((res)=>{
+                    axios.post("/admin/newDiary",this.newDiary).then((res)=>{
                         console.log(res.data);
-                        if (res.data.code === 200100){
+                        if (res.data.code === 200401){
+                            this.openCreatedDiaryTip = true
+                            this.createdDiaryTip = "日记创建成功。"
                         }else{
+                            this.openCreatedDiaryTip = true
+                            this.createdDiaryTip = "服务器错误。"
                         }
                     }).finally(()=>{
                         this[l] = false
                         this.in_submit = false
-
-                        this.createdDiaryTip = "日记创建成功。"
-                        this.openCreatedDiaryTip = true
-
                     });
 
                     this.loader = null
