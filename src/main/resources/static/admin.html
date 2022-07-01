@@ -38,6 +38,11 @@
             padding-left: 32px;
             padding-top: 64px;
         }
+
+        #diaries{
+            padding-left: 32px;
+            padding-top: 32px;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +63,7 @@
                 ></v-text-field>
             </v-col>
 
-            <v-col cols="12" >
+            <v-col cols="12" sm="8" md="5">
                 <v-textarea
                         color="teal"
                         solo
@@ -85,6 +90,42 @@
                 {{createdDiaryTip}}
             </v-snackbar>
         </div>
+
+
+        <div id="diaries">
+            <v-card
+                    max-width="450"
+                    class="mx-auto">
+
+                <v-list three-line>
+                    <v-subheader>
+                        之前..
+                    </v-subheader>
+                    <template v-for="(diary, index) in pre_diaries">
+
+
+                        <v-divider></v-divider>
+
+                        <v-list-item
+                                :key="diary.title"
+                                @click=""
+                        >
+<!--                            <v-list-item-avatar>-->
+<!--                                <v-img :src="diary.avatar"></v-img>-->
+<!--                            </v-list-item-avatar>-->
+
+                            <v-list-item-content>
+                                <v-list-item-title v-html="diary.title"></v-list-item-title>
+                                <v-list-item-subtitle v-html="diary.time"></v-list-item-subtitle>
+                                <v-list-item-subtitle v-html="diary.content"></v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </template>
+                </v-list>
+            </v-card>
+        </div>
+
+
     </template>
 
 </div>
@@ -97,7 +138,6 @@
     let v = new Vue({
         el:'#mng-main',
         data:{
-            diaries:[],
             refresh_diaries:false,
             master:"你目前还没登录~",
             rules: [
@@ -110,6 +150,10 @@
             openCreatedDiaryTip:false,
             loading: false,
             loader: null,
+            pre_diaries: [
+            ],
+            page:1,
+            size:5,
         },
         watch:{
             diaries(newVal) {
@@ -153,6 +197,13 @@
             axios.post("/admin").then((res)=>{
                 console.log(res.data);
                 this.master = res.data.msg.username
+            }).finally(()=>{
+            });
+
+            axios.get("/fetch?page="+this.page+"&size="+this.size).then((res)=>{
+                console.log(res.data);
+                this.pre_diaries = res.data;
+                // this.showNext = true;
             }).finally(()=>{
             });
         }
