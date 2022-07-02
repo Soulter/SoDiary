@@ -89,7 +89,7 @@
 
 <div class="site-main" id="site-main">
     <div class="site-header">
-        <a id="site-title" href="./login.html">
+        <a id="site-title" @click="gotoAdmin">
             星の空 Diary
         </a>
     </div>
@@ -156,7 +156,7 @@
         },
         mounted() {
             //发送ajax请求
-            axios.get("/fetch?page="+this.page+"&size="+this.size).then((res)=>{
+            axios.get("/diary/fetch?page="+this.page+"&size="+this.size).then((res)=>{
                 console.log(res.data);
                 this.diaries = res.data;
                 console.log(this.diaries);
@@ -168,7 +168,7 @@
             nextPage(){
                 //发送ajax请求
                 this.page++;
-                axios.get("/fetch?page="+this.page+"&size="+this.size).then((res)=>{
+                axios.get("/diary/fetch?page="+this.page+"&size="+this.size).then((res)=>{
                     console.log(res.data);
                     this.diaries = res.data.reverse();
                     console.log(this.diaries.reverse())
@@ -180,7 +180,7 @@
             prePage(){
                 //发送ajax请求
                 this.page--;
-                axios.get("/fetch?page="+this.page+"&size="+this.size).then((res)=>{
+                axios.get("/diary/fetch?page="+this.page+"&size="+this.size).then((res)=>{
                     console.log(res.data);
                     this.diaries = res.data.reverse();
                     console.log(this.diaries.reverse())
@@ -193,6 +193,18 @@
                 }).finally(()=>{
                 });
             },
+
+            gotoAdmin(){
+                axios.post("/admin").then((res)=>{
+                    console.log("checking...")
+                    if (res.data.code === 200101){
+                        window.location.href = "./admin.html";
+                    }else{
+                        window.location.href = "./login.html";
+                    }
+                }).finally(()=>{
+                });
+            }
         }
     });
 

@@ -7,4 +7,5 @@ public class Diary {
     String title;
     String time;
     String content;
+    long id;
 }

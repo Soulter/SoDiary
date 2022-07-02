@@ -1,6 +1,7 @@
 package top.soulter.sodiary.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,21 @@ public class DiaryServiceImpl implements DiaryService {
             SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm");
             diary.setTime(dateFormat.format(calendar.getTime()));
             diaryDao.insert(diary);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean updateDiary(Diary diary) {
+        try{
+//            Calendar calendar= Calendar.getInstance();
+//            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm");
+//            diary.setTime(dateFormat.format(calendar.getTime()));
+            UpdateWrapper<Diary> uw = new UpdateWrapper<>();
+            uw.eq("id", diary.getId());
+            diaryDao.update(diary, uw);
             return true;
         }catch (Exception e){
             return false;

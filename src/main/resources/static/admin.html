@@ -81,7 +81,11 @@
                     :loading="loading"
                     :disabled="loading"
                     @click="loader = 'loading'">
-                搞定。
+                {{btnName}}
+            </v-btn>
+
+            <v-btn class="ma-2" outlined color="green" v-show="editMode" @click="closeEditMode">
+                关闭编辑模式
             </v-btn>
 
             <v-snackbar
@@ -108,7 +112,7 @@
 
                         <v-list-item
                                 :key="diary.title"
-                                @click=""
+                                @click="diaryOperation(diary)"
                         >
 <!--                            <v-list-item-avatar>-->
 <!--                                <v-img :src="diary.avatar"></v-img>-->
@@ -150,10 +154,11 @@
             openCreatedDiaryTip:false,
             loading: false,
             loader: null,
-            pre_diaries: [
-            ],
+            pre_diaries: [{"title":"test","time":"2020-01-01","content":"test"}],
             page:1,
             size:5,
+            btnName:"搞定。",
+            editMode:false,
         },
         watch:{
             diaries(newVal) {
@@ -170,24 +175,50 @@
                     this.in_submit = true
                     const l = this.loader
                     this[l] = !this[l]
-
                     console.log(this.newDiary)
-                    //发送ajax请求
-                    axios.post("/admin/newDiary",this.newDiary).then((res)=>{
-                        console.log(res.data);
-                        if (res.data.code === 200401){
-                            this.openCreatedDiaryTip = true
-                            this.createdDiaryTip = "日记创建成功。"
-                        }else{
-                            this.openCreatedDiaryTip = true
-                            this.createdDiaryTip = "服务器错误。"
-                        }
-                    }).finally(()=>{
-                        this[l] = false
-                        this.in_submit = false
-                    });
 
+                    if (this.editMode){
+
+                        axios.post('/admin/updateDiary', this.newDiary)
+                            .then(res => {
+                                this.createdDiaryTip = "更新成功！"
+                                this.openCreatedDiaryTip = true
+                                this.btnName="搞定。"
+                                this.editMode=false
+                                this.newDiary= {}
+                                this.fetchDiaries()
+
+                            })
+                            .catch(err => {
+                                this.createdDiaryTip = "更新失败！"
+                                this.openCreatedDiaryTip = true
+                            }).finally(() => {
+                            })
+
+                    }else{
+                        //发送ajax请求
+                        axios.post("/admin/newDiary",this.newDiary).then((res)=>{
+                            console.log(res.data);
+                            if (res.data.code === 200401){
+                                this.openCreatedDiaryTip = true
+                                this.createdDiaryTip = "日记创建成功。"
+                                this.fetchDiaries()
+                            }else{
+                                this.openCreatedDiaryTip = true
+                                this.createdDiaryTip = "服务器错误。"
+                            }
+                        }).finally(()=>{
+
+                        });
+                    }
+
+                    this[l] = false
+                    this.in_submit = false
                     this.loader = null
+
+                }else{
+                    this.createdDiaryTip= "没有登录，";
+                    this.openCreatedDiaryTip = true;
                 }
 
             },
@@ -200,12 +231,30 @@
             }).finally(()=>{
             });
 
-            axios.get("/fetch?page="+this.page+"&size="+this.size).then((res)=>{
-                console.log(res.data);
-                this.pre_diaries = res.data;
-                // this.showNext = true;
-            }).finally(()=>{
-            });
+            this.fetchDiaries()
+        },
+        methods: {
+            diaryOperation(diary){
+                this.editMode = true;
+                this.btnName = "更新。";
+                this.newDiary.title = diary.title;
+                this.newDiary.content = diary.content;
+                this.newDiary.id = diary.id;
+            },
+            closeEditMode(){
+                this.editMode = false;
+                this.btnName = "搞定。";
+                this.newDiary.title = "";
+                this.newDiary.content = "";
+            },
+            fetchDiaries(){
+                axios.get("/diary/fetch?page="+this.page+"&size="+this.size).then((res)=>{
+                    console.log(res.data);
+                    this.pre_diaries = res.data;
+                    // this.showNext = true;
+                }).finally(()=>{
+                });
+            },
         }
     });
 

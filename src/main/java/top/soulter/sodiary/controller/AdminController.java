@@ -57,4 +57,23 @@ public class AdminController {
         }
         return result;
     }
+
+    @PostMapping
+    @RequestMapping("/updateDiary")
+    public Result updateDiary(@RequestBody Diary diary, HttpServletRequest request){
+        Result result = new Result();
+        HttpSession session = request.getSession();
+        if ("true".equals(session.getAttribute("is_login"))){
+            try{
+                diaryService.updateDiary(diary);
+                result.setCode(UPDATE_SUCCESS);
+            }catch (Exception e){
+                e.printStackTrace();
+                result.setCode(SERVER_ERR);
+            }
+        }else{
+            result.setCode(PERMISSION_DENIED);
+        }
+        return result;
+    }
 }

@@ -8,4 +8,5 @@ import java.util.List;
 public interface DiaryService {
     List<Diary> fetchDiary(int page, int size);
     Boolean submitDiary(Diary diary);
+    Boolean updateDiary(Diary diary);
 }
