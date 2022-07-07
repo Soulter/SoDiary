@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Noto+Serif+SC:300,400,700&amp;display=swap&amp;subset=chinese-simplified" rel="stylesheet">
     <link href="assets/materialdesignicons.min.css" rel="stylesheet">
     <link href="assets/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <style>
         body{
             font-family: "Noto Serif SC",serif;
@@ -87,6 +88,8 @@
             <v-btn class="ma-2" outlined color="green" v-show="editMode" @click="closeEditMode">
                 关闭编辑模式
             </v-btn>
+
+            <v-btn color="#F44336" v-show="editMode" @click="deleteDiary">删除</v-btn>
 
             <v-snackbar
                     v-model="openCreatedDiaryTip"
@@ -252,6 +255,22 @@
                     console.log(res.data);
                     this.pre_diaries = res.data;
                     // this.showNext = true;
+                }).finally(()=>{
+                });
+            },
+            deleteDiary(){
+                axios.post("/admin/deleteDiary",{"id":this.newDiary.id}).then((res)=>{
+                    console.log(res.data);
+                    if (res.data.code === 200601){
+                        this.createdDiaryTip = "日记删除成功。"
+                        this.openCreatedDiaryTip = true
+                        this.fetchDiaries()
+                        this.editMode = false;
+                        this.newDiary = {};
+                    }else{
+                        this.createdDiaryTip = "服务器错误。"
+                        this.openCreatedDiaryTip = true
+                    }
                 }).finally(()=>{
                 });
             },

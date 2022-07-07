@@ -9,4 +9,6 @@ public interface DiaryService {
     List<Diary> fetchDiary(int page, int size);
     Boolean submitDiary(Diary diary);
     Boolean updateDiary(Diary diary);
+    Boolean deleteDiary(long id);
+
 }

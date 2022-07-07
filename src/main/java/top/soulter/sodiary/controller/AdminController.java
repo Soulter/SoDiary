@@ -76,4 +76,23 @@ public class AdminController {
         }
         return result;
     }
+
+    @PostMapping
+    @RequestMapping("/deleteDiary")
+    public Result deleteDiary(@RequestBody Diary diary, HttpServletRequest request){
+        Result result = new Result();
+        HttpSession session = request.getSession();
+        if ("true".equals(session.getAttribute("is_login"))){
+            try{
+                diaryService.deleteDiary(diary.getId());
+                result.setCode(DELETE_SUCCESS);
+            }catch (Exception e){
+                e.printStackTrace();
+                result.setCode(SERVER_ERR);
+            }
+        }else{
+            result.setCode(PERMISSION_DENIED);
+        }
+        return result;
+    }
 }

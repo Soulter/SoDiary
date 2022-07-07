@@ -68,4 +68,16 @@ public class DiaryServiceImpl implements DiaryService {
         }
     }
 
+    @Override
+    public Boolean deleteDiary(long id) {
+        try{
+            QueryWrapper<Diary> uw = new QueryWrapper<>();
+            uw.eq("id", id);
+            diaryDao.delete(uw);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
 }
