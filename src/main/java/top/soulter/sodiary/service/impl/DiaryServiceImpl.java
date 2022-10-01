@@ -12,7 +12,9 @@ import top.soulter.sodiary.service.DiaryService;
 
 import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static top.soulter.sodiary.util.Presets.*;
@@ -24,7 +26,7 @@ public class DiaryServiceImpl implements DiaryService {
     private DiaryDao diaryDao;
 
     @Override
-    public List<Diary> fetchDiary(int page, int size) {
+    public List<Diary> fetchDiary(int page, int size, boolean lock) {
         QueryWrapper<Diary> qw = new QueryWrapper<>();
 //        long count = diaryDao.selectCount(qw);
 //        long shouldPage = (count%size == 0 ? count/size : count/size + 1) - page + 1;
@@ -37,15 +39,26 @@ public class DiaryServiceImpl implements DiaryService {
         System.out.println("数据为："+diaryPage.getRecords());
         System.out.println("总数为："+diaryPage.getTotal()+",总页数为："+diaryPage.getPages());
         System.out.println("当前页为："+diaryPage.getCurrent()+",每页限制："+diaryPage.getSize());
-        return diaryPage.getRecords();
+
+        List<Diary> diaries = diaryPage.getRecords();
+        if (lock){
+            for (Diary diary : diaries) {
+                if (diary.isLock()){
+                    diary.setTitle("***");
+                    diary.setContent("这是一篇加密日记");
+                }
+            }
+        }
+
+        return diaries;
     }
 
     @Override
     public Boolean submitDiary(Diary diary) {
         try{
-            Calendar calendar= Calendar.getInstance();
-            SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd hh:mm");
-            diary.setTime(dateFormat.format(calendar.getTime()));
+            Date dNow = new Date( );
+            SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd hh:mm");
+            diary.setTime(ft.format(dNow));
             diaryDao.insert(diary);
             return true;
         }catch (Exception e){

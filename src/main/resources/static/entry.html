@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>-Diary Entry-</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="assets/materialdesignicons.min.css" rel="stylesheet">
+    <link href="assets/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <style>
+        .code{
+            width: 35%;
+            position: relative;
+            margin: 0 auto;
+            vertical-align: middle;
+
+        }
+
+        #app{
+            position: relative;
+            margin: 0 auto;
+            vertical-align: middle;
+            text-align: center;
+        }
+        #notice{
+            color: #ffffff;
+            font-size: 50px;
+            text-align: center;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body bgcolor="#FBD26A">
+
+
+<h1 id="notice">凭证进入。</h1>
+
+<div id="app">
+    <template>
+        <v-container class="code">
+            <v-row no-gutters
+                   :justify="justify"
+                   :align="center">
+                <template v-for="n in 9">
+                    <v-col :key="n"
+                           :align="center">
+                        <v-btn
+                                text
+                                width = "100"
+                                height = "100"
+                                x-large
+                        >
+                            {{n}}
+                        </v-btn>
+                    </v-col>
+                    <v-responsive
+                            v-if="n % 3 == 0"
+                            :key="`width-${n}`"
+                            width="100%"
+                    ></v-responsive>
+                </template>
+            </v-row>
+        </v-container>
+    </template>
+</div>
+
+
+
+
+<script src="js/vue.js"></script>
+<script src="js/vuetify.js"></script>
+<script src="js/axios-0.18.0.js"></script>
+
+<script>
+    let v = new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data(){
+            return{
+
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -7,5 +7,7 @@ public class Diary {
     String title;
     String time;
     String content;
+
+    boolean isLock = true;
     long id;
 }

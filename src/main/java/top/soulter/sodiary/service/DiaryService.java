@@ -6,7 +6,7 @@ import top.soulter.sodiary.domain.Diary;
 import java.util.List;
 
 public interface DiaryService {
-    List<Diary> fetchDiary(int page, int size);
+    List<Diary> fetchDiary(int page, int size, boolean lock);
     Boolean submitDiary(Diary diary);
     Boolean updateDiary(Diary diary);
     Boolean deleteDiary(long id);

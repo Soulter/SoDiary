@@ -1,10 +1,7 @@
 package top.soulter.sodiary.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.soulter.sodiary.domain.Diary;
 import top.soulter.sodiary.domain.Result;
 import top.soulter.sodiary.domain.User;
@@ -16,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import static top.soulter.sodiary.util.Presets.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -26,6 +24,7 @@ public class AdminController {
     public Result checkStatus(HttpServletRequest request){
         Result result = new Result();
         HttpSession session = request.getSession();
+        System.out.println(session.getAttribute("username"));
         if ("true".equals(session.getAttribute("is_login"))){
             result.setCode(LOGIN_SUCCESS);
             User user = new User();

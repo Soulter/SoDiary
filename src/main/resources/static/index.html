@@ -142,6 +142,16 @@
             size:5,
             showPre:false,
             showNext:false,
+            test111:{
+                "UID":"",
+                "conditions":{
+                    "year":2021
+                },
+                "order":"id",
+                "direction":1,
+                "page_size":1000,
+                "page":1
+            }
         },
         watch:{
             diaries(newVal) {
@@ -163,6 +173,7 @@
                 this.showNext = true;
             }).finally(()=>{
             });
+
         },
         methods: {
             nextPage(){

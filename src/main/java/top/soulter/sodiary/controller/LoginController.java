@@ -1,10 +1,7 @@
 package top.soulter.sodiary.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.soulter.sodiary.domain.Result;
 import top.soulter.sodiary.domain.User;
 import top.soulter.sodiary.service.UserService;
@@ -15,11 +12,14 @@ import javax.servlet.http.HttpSession;
 import static top.soulter.sodiary.util.Presets.LOGIN_SUCCESS;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/login")
 public class LoginController {
 
     @Autowired
     UserService userService;
+
+
 
     @PostMapping
     public Result userLogin(@RequestBody User user, HttpServletRequest request){
@@ -32,4 +32,6 @@ public class LoginController {
         }
         return result;
     }
+
+
 }
