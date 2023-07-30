@@ -1,5 +1,6 @@
 package top.soulter.sodiary.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 @Data
@@ -8,6 +9,12 @@ public class Diary {
     String time;
     String content;
 
-    boolean isLock = true;
+    @TableField(exist = false)
+    String brief;
+    @TableField(exist = false)
+    String bg;
+
+    @TableField("is_lock")
+    boolean isLock = false;
     long id;
 }

@@ -13,15 +13,14 @@ import static top.soulter.sodiary.util.Presets.LOGIN_SUCCESS;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/login")
+
 public class LoginController {
 
     @Autowired
     UserService userService;
 
-
-
     @PostMapping
+    @RequestMapping("api/login")
     public Result userLogin(@RequestBody User user, HttpServletRequest request){
         Result result = userService.checkUser(user);
         System.out.println(result);
@@ -31,6 +30,12 @@ public class LoginController {
             session.setAttribute("username", user.getUsername());
         }
         return result;
+    }
+
+    @PostMapping
+    @RequestMapping("api/register")
+    public Result userRegister(@RequestBody User user){
+        return userService.registerUser(user);
     }
 
 

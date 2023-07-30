@@ -1,8 +1,12 @@
 server:
-  port: 80
+  port: 81
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://101.43.189.33:3306/sodiary
+    url: jdbc:mysql://117.50.192.172/sodiary
     username: sodiary
     password: sodiary
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

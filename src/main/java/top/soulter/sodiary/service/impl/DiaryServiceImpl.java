@@ -50,7 +50,56 @@ public class DiaryServiceImpl implements DiaryService {
             }
         }
 
+        for (Diary diary : diaries) {
+            String content = diary.getContent();
+            int index = content.indexOf("---");
+            if (index != -1) {
+                String brief = content.substring(0, index);
+                String[] split = brief.split("\n");
+                for(String i : split) {
+                    if(i.startsWith("brief")) {
+                        diary.setBrief(i.replaceFirst("brief", ""));
+                        diary.setContent("");
+                    }
+                    if(i.startsWith("bg")) {
+                        diary.setBg(i.replaceFirst("bg", ""));
+                    }
+                }
+            }
+        }
+
         return diaries;
+    }
+
+    @Override
+    public Result fetchDiaryById(long id, boolean lock) {
+        QueryWrapper<Diary> qw = new QueryWrapper<>();
+        qw.eq("id", id);
+        Diary diary = diaryDao.selectOne(qw);
+        if (diary == null){
+            return new Result(0 ,"日记不存在");
+        }
+        if (lock && diary.isLock()){
+            diary.setTitle("***");
+            diary.setContent("这是一篇加密日记");
+        }
+        String content = diary.getContent();
+        int index = content.indexOf("---");
+        if (index != -1) {
+            String brief = content.substring(0, index);
+            String[] split = brief.split("\n");
+            for(String i : split) {
+                if(i.startsWith("brief")) {
+                    diary.setBrief(i.replaceFirst("brief", ""));
+                }
+                if(i.startsWith("bg")) {
+                    diary.setBg(i.replaceFirst("bg", ""));
+                }
+            }
+        }
+        content = content.substring(index + 3);
+        diary.setContent(content);
+        return new Result(1, "获取成功", diary);
     }
 
     @Override

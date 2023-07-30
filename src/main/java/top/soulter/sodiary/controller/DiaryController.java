@@ -1,6 +1,9 @@
 package top.soulter.sodiary.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import top.soulter.sodiary.domain.Diary;
 import top.soulter.sodiary.domain.Result;
@@ -15,8 +18,9 @@ import java.util.List;
 import static top.soulter.sodiary.util.Presets.LOGIN_SUCCESS;
 
 @RestController
+@Slf4j
 @CrossOrigin
-@RequestMapping("/diary")
+@RequestMapping("api/diary")
 public class DiaryController {
 
     @Autowired
@@ -26,6 +30,7 @@ public class DiaryController {
 
     @RequestMapping("/fetch")
     @GetMapping
+    @CachePut(value = "diary", key = "#page + '-' +#size")
     public List<Diary> fetchDiary(@RequestParam("page") int page, @RequestParam("size") int size, HttpServletRequest request){
         HttpSession session = request.getSession();
         List<Diary> diaries;
@@ -34,9 +39,24 @@ public class DiaryController {
         }else{
             diaries = diaryService.fetchDiary(page, size, true);
         }
+        log.info("fetch diary page: " + page + " size: " + size);
 
         System.out.println(diaries);
         return diaries;
+    }
+
+
+    // detail by id
+    @RequestMapping("/detail")
+    @GetMapping
+    public Result fetchDiaryById(@RequestParam("id") long id, HttpServletRequest request){
+        log.info("fetch diary id: " + id);
+        HttpSession session = request.getSession();
+        if (session.getAttribute("is_unlock") != null && "true".equals(session.getAttribute("is_unlock"))){
+            return diaryService.fetchDiaryById(id, false);
+        }else{
+            return diaryService.fetchDiaryById(id, true);
+        }
     }
 
 

@@ -10,5 +10,6 @@ public interface DiaryService {
     Boolean submitDiary(Diary diary);
     Boolean updateDiary(Diary diary);
     Boolean deleteDiary(long id);
+    Result fetchDiaryById(long id, boolean lock);
 
 }

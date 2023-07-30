@@ -33,7 +33,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result registerUser() {
-        return null;
+    public Result registerUser(User user) {
+        Result result = new Result();
+        QueryWrapper<User> qw = new QueryWrapper<>();
+        qw.eq("username", user.getUsername());
+        if (userDao.selectList(qw).size() > 0){
+            result.setCode(REGISTER_FAILED_USR_EXIST);
+            result.setMsg(MSG_REGISTER_FAILED_USR_EXIST);
+        }else{
+            userDao.insert(user);
+            result.setCode(REGISTER_SUCCESS);
+        }
+        return result;
     }
 }

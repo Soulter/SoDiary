@@ -14,7 +14,7 @@ import static top.soulter.sodiary.util.Presets.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/admin")
+@RequestMapping("api/admin")
 public class AdminController {
 
     @Autowired
@@ -45,6 +45,7 @@ public class AdminController {
         HttpSession session = request.getSession();
         if ("true".equals(session.getAttribute("is_login"))){
             try{
+                System.out.println(diary);
                 diaryService.submitDiary(diary);
                 result.setCode(SUBMIT_SUCCESS);
             }catch (Exception e){
