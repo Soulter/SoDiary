@@ -29,6 +29,6 @@ A E-Diary which is under constructing.
 
 ![image](https://github.com/Soulter/SoDiary/assets/37870767/6c75bd51-bee0-4a75-b101-fe99da088758)
 
-![image](https://github.com/Soulter/SoDiary/assets/37870767/f4674be9-f72f-4ea8-bf14-bb697f10f883)
+![image](https://github.com/Soulter/SoDiary/assets/37870767/51c9bf1f-5641-42ae-9fdf-b66412eb9394)
 
 
